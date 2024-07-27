@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <title>Kurt Peters</title>
+</head>
+<body>
+    <header>
+        <h1>Kurt Peters</h1>
+    </header>
+    <main>
+        <p>Want to see my work? Check out my GitHub. Want to get in touch? Message me on LinkedIn.</p>
+        <ul>
+            <li><a href="https://github.com/kurt1288">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/peterskurt/">LinkedIn</a></li>
+            <li><a href="https://stackoverflow.com/users/1078475/kurt?tab=profile">Stack Overflow</a></li>
+        </ul>
+        <p>Play against my TypeScript chess bot, <a href="https://github.com/kurt1288/KhepriChess">KhepriChess</a>.</p>
+        <div id="container">
+            <div id="chessboard"></div>
+            <div id="thinking"><span class="loader"></span></div>
+        </div>
+    </main>
+    <link rel="stylesheet"
+        href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
+        integrity="sha384-47VeTDpmy4yT21gKPXQcLQYQZwlmz27gEH5NTrOmTk3G/SGvMyltclOW/Q8uE+sL"
+        crossorigin="anonymous">
+    <script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
+        integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
+        crossorigin="anonymous"></script>
+    <script src="khepri.min.js"></script>
+    <script type="module">
+        import { Chess } from 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js';
+        
+        const moves = [];
+
+        function onDragStart({ orientation, piece, position, square }) {
+            // do not pick up pieces if the game is over
+            if (game.game_over()) return false;
+
+            // only pick up pieces for White
+            if (piece.search(/^b/) !== -1) return false;
+        }
+
+        function onDrop({ source, target }) {
+            // see if the move is legal
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            });
+
+            // illegal move
+            if (move === null) return 'snapback';
+
+            let moveValue = source + target;
+
+            if (move.promotion) {
+                moveValue += move.promotion;
+            }
+
+            moves.push(moveValue);
+            document.getElementById("thinking").classList.toggle("show");
+
+            setTimeout(makeEngineMove, 100);
+        }
+
+        // update the board position after the piece snap
+        // for castling, en passant, pawn promotion
+        function onSnapEnd() {
+            board.position(game.fen())
+        }
+
+        function makeEngineMove() {
+            engine.ParseUCIPosition(`position startpos moves ${moves.join(' ')}`);
+            engine.ParseUCIGo('go movetime 1000');
+            const engineMove = engine.StringifyMove(engine.pvArray[0][0]);
+            moves.push(engineMove);
+            game.move(engineMove, { sloppy: true });
+            board.position(game.fen());
+            document.getElementById("thinking").classList.toggle("show");
+        }
+
+        const board = Chessboard2('chessboard', {
+            position: 'start',
+            draggable: true,
+            onDragStart,
+            onDrop,
+            onSnapEnd,
+        });
+
+        const engine = new Engine();
+        const game = new Chess();
+    </script>
+</body>
+</html>

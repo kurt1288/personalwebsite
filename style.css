@@ -1,0 +1,88 @@
+html {
+    height: 100%;
+    background: #f9f9f9;
+}
+
+body {
+	width: 40%;
+	margin: 0 auto;
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+    color: #242424;
+}
+
+h1 {
+    font-weight: 400;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+a {
+    color: #0077aa;
+}
+
+#container {
+    position: relative;
+}
+
+#chessboard {
+    margin: 0 auto;
+    max-width: 500px;
+}
+
+#thinking {
+    display: none;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	background: rgba(0, 0, 0, .5);
+	align-items: center;
+	justify-content: center;
+}
+
+#thinking.show {
+    display: flex;
+}
+
+.loader {
+	width: 30px;
+	height: 30px;
+	border: 2px solid #EAEAEA;
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
+
+@media (max-width: 600px) {
+    body {
+        width: 90%;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background: #1e1e1e;
+    }
+
+    body {
+        color: #e8e8e8;
+    }
+
+    a {
+        color: #0093d2;
+    }
+}
