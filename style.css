@@ -37,7 +37,9 @@ a {
 	position: absolute;
 	height: 100%;
 	width: 100%;
+    max-width: 500px;
 	top: 0;
+    left: 17.5%;
 	background: rgba(0, 0, 0, .5);
 	align-items: center;
 	justify-content: center;
@@ -70,6 +72,10 @@ a {
 @media (max-width: 600px) {
     body {
         width: 90%;
+    }
+
+    #thinking {
+        left: 0;
     }
 }
 
