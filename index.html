@@ -9,27 +9,22 @@
 <body>
     <header>
         <h1>Kurt Peters</h1>
-    </header>
-    <main>
-        <p>Want to see my work? Check out my GitHub. Want to get in touch? Message me on LinkedIn.</p>
-        <ul>
+        <ul id="links">
             <li><a href="https://github.com/kurt1288">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/peterskurt/">LinkedIn</a></li>
             <li><a href="https://stackoverflow.com/users/1078475/kurt?tab=profile">Stack Overflow</a></li>
         </ul>
+    </header>
+    <main>
+        <p>Want to see my work? Check out my GitHub. Want to get in touch? Message me on LinkedIn.</p>
         <p>Play against my TypeScript chess bot, <a href="https://github.com/kurt1288/KhepriChess">KhepriChess</a>.</p>
         <div id="container">
             <div id="chessboard"></div>
             <div id="thinking"><span class="loader"></span></div>
         </div>
     </main>
-    <link rel="stylesheet"
-        href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
-        integrity="sha384-47VeTDpmy4yT21gKPXQcLQYQZwlmz27gEH5NTrOmTk3G/SGvMyltclOW/Q8uE+sL"
-        crossorigin="anonymous">
-    <script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
-        integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css" rel="stylesheet">
     <script src="khepri.min.js"></script>
     <script type="module">
         import { Chess } from 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js';
