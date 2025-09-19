@@ -1,13 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
+
 html {
     height: 100%;
-    background: #f9f9f9;
+    background: #FFFBFB;
 }
 
 body {
 	width: 40%;
 	margin: 0 auto;
-    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
-    color: #242424;
+    font-family: "Inter", "Lucida Sans", Tahoma, sans-serif;
+    color: #361719;
 }
 
 header {
@@ -18,8 +20,25 @@ header {
 }
 
 h1 {
+    font-family: "Inter", sans-serif;
     font-size: 2.5rem;
     font-weight: 400;
+    margin-bottom: 0;
+}
+
+h1 > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h3 {
+    margin-top: 5px;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+h4 {
+    font-size: 1.2rem;
     margin-bottom: 0;
 }
 
@@ -32,7 +51,16 @@ ul {
 }
 
 a {
-    color: #4eb0ed;
+    color: #361719;
+}
+
+a:hover {
+    color: #a51d2d;
+}
+
+#viewKhepri {
+	margin-bottom: 1rem;
+	display: block;
 }
 
 #container {
@@ -42,6 +70,27 @@ a {
 #chessboard {
     margin: 0 auto;
     max-width: 500px;
+}
+
+#evalBar {
+    position: relative;
+	height: 1rem;
+	max-width: 500px;
+	margin: 0 auto;
+	background-color: #d9d9d9;
+    border-radius: 3px;
+}
+
+#blackBar {
+	height: 1rem;
+	max-width: 500px;
+	margin: 0 auto;
+	background-color: #555;
+	border-radius: 3px;
+	width: 50%;
+	right: 0;
+	position: absolute;
+    transition: width 1.5s ease;
 }
 
 #thinking {
@@ -93,14 +142,14 @@ a {
 
 @media (prefers-color-scheme: dark) {
     html {
-        background: #1a2024;
+        background: #36171B;
     }
 
     body {
-        color: #e8e8e8;
+        color: #FAF4F5;
     }
 
     a {
-        color: #0093d2;
+        color: #FFFFFF;
     }
 }

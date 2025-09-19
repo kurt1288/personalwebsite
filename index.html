@@ -8,18 +8,23 @@
 </head>
 <body>
     <header>
-        <h1>Kurt Peters</h1>
-        <ul id="links">
-            <li><a href="https://github.com/kurt1288">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/peterskurt/">LinkedIn</a></li>
-            <li><a href="https://stackoverflow.com/users/1078475/kurt?tab=profile">Stack Overflow</a></li>
-        </ul>
+        <h1><a href="/">Kurt Peters</a></h1>
+        <nav>
+            <ul id="links">
+                <li><a href="https://github.com/kurt1288">GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/peterskurt/">LinkedIn</a></li>
+                <!-- <li><a href="https://stackoverflow.com/users/1078475/kurt?tab=profile">Stack Overflow</a></li> -->
+            </ul>
+        </nav>
+        <h3>Senior software engineer, full-stack experience with a focus on frontend development</h3>
     </header>
     <main>
-        <p>Want to see my work? Check out my GitHub. Want to get in touch? Message me on LinkedIn.</p>
-        <p>Play against my TypeScript chess bot, <a href="https://github.com/kurt1288/KhepriChess">KhepriChess</a>.</p>
+        <h4>Why the chess board?</h4>
+        <p>I made a Javascript chess engine and you can play against it! Make your first move with the white pieces to begin.</p>
+        <a id="viewKhepri" href="https://github.com/kurt1288/KhepriChess" target="_blank">View Code</a>
         <div id="container">
             <div id="chessboard"></div>
+            <div id="evalBar"><div id="blackBar"></div></div>
             <div id="thinking"><span class="loader"></span></div>
         </div>
     </main>
@@ -30,6 +35,36 @@
         import { Chess } from 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js';
         
         const moves = [];
+        const logOutput = [];
+
+        // override to capture engine info output, to display eval bar
+        console.log = function(...args) {
+            logOutput.push(args.join(" "));
+        }
+
+        function updateEvalBar(evaluation) {
+            let evalCp = 0;
+            const uciString = logOutput[logOutput.length - 2]; // - 2 because the last output is bestmove
+            const match = uciString.match(/score cp (-?\d+)/);
+
+            if (match) {
+                evalCp = parseInt(match[1], 10);
+            }
+            else {
+                // Handle "score mate"
+                const mateMatch = uciString.match(/score mate (-?\d+)/);
+
+                if (mateMatch) {
+                    const mateScore = parseInt(mateMatch[1], 10);
+                    const sign = mateScore > 0 ? 1 : -1;
+                    evalCp = sign * 1000;
+                }
+            }
+
+            const clamped = Math.max(-1000, Math.min(1000, evalCp * -1)); // invert cp value because it's always black
+            const percentage = 50 - (clamped / 1000) * 50;
+            document.getElementById("blackBar").style.width = `${percentage}%`;
+        }
 
         function onDragStart({ orientation, piece, position, square }) {
             // do not pick up pieces if the game is over
@@ -69,6 +104,7 @@
         }
 
         function makeEngineMove() {
+            logOutput.length = 0;
             engine.ParseUCIPosition(`position startpos moves ${moves.join(' ')}`);
             engine.ParseUCIGo('go movetime 1000');
             const engineMove = engine.StringifyMove(engine.pvArray[0][0]);
@@ -76,6 +112,8 @@
             game.move(engineMove, { sloppy: true });
             board.position(game.fen());
             document.getElementById("thinking").classList.toggle("show");
+            logOutput.forEach((line) => console.info(line));
+            updateEvalBar();
         }
 
         const board = Chessboard2('chessboard', {
