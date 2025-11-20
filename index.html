@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
     <title>Kurt Peters</title>
+    <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <header>
@@ -32,7 +34,24 @@
     <link href="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css" rel="stylesheet">
     <script src="khepri.min.js"></script>
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, doc, updateDoc, collection } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js';
         import { Chess } from 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js';
+
+        // Firebase setup
+        const firebaseConfig = {
+            apiKey: "AIzaSyB554NvK_PA4hGz_vRzr4DmFSaDBViXm8Y",
+            authDomain: "kurtpeters.net",
+            projectId: "home-page-chess-info",
+            storageBucket: "home-page-chess-info.firebasestorage.app",
+            messagingSenderId: "493997662150",
+            appId: "1:493997662150:web:c2e9a77a0d1e59a902dcc7",
+            measurementId: "G-4YYFWYPYMB",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        let gameRef = null;
         
         const moves = [];
         const logOutput = [];
@@ -72,6 +91,10 @@
 
             // only pick up pieces for White
             if (piece.search(/^b/) !== -1) return false;
+
+            if (game.history().length === 0) {
+                gameRef = doc(collection(db, "games"));
+            }
         }
 
         function onDrop({ source, target }) {
@@ -103,6 +126,18 @@
             board.position(game.fen())
         }
 
+        function onMoveEnd() {
+            const updates = {
+                position: game.fen(),
+            };
+
+            if (game.game_over()) {
+                updates.result = game.turn() === "w" ? "b" : "w";
+            }
+
+            updateDoc(gameRef, updates);
+        }
+
         function makeEngineMove() {
             logOutput.length = 0;
             engine.ParseUCIPosition(`position startpos moves ${moves.join(' ')}`);
@@ -122,6 +157,7 @@
             onDragStart,
             onDrop,
             onSnapEnd,
+            onMoveEnd,
         });
 
         const engine = new Engine();
