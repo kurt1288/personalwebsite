@@ -35,7 +35,7 @@
     <script src="khepri.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getFirestore, doc, updateDoc, collection } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, updateDoc, collection } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js';
         import { Chess } from 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js';
 
         // Firebase setup
@@ -94,6 +94,9 @@
 
             if (game.history().length === 0) {
                 gameRef = doc(collection(db, "games"));
+                setDoc(gameRef, {
+                    position: game.fen(),
+                });
             }
         }
 
